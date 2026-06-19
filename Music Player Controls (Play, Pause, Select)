@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stdexcept>
+#include <SDL.h>
+#include <SDL_mixer.h>
+
+class BoombaFM {
+private:
+    std::string current_song_title;
+    std::string current_song_file;
+    bool is_playing;
+    
+public:
+    BoombaFM() : is_playing(false) {
+        if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+            throw std::runtime_error("SDL could not initialize! SDL_Error: " + std::string(SDL_GetError()));
+        }
+        if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+            throw std::runtime_error("SDL_mixer could not initialize! SDL_mixer Error: " + std::string(Mix_GetError()));
+        }
+    }
+
+    ~BoombaFM() {
+        Mix_CloseAudio();
+        SDL_Quit();
+    }
+
+    void play_current() {
+        if (current_song_file.empty()) {
+            std::cerr << "No Song Selected. Please select a song first." << std::endl;
+            return;
+        }
+
+        Mix_Music* music = Mix_LoadMUS(current_song_file.c_str());
+        if (!music) {
+            std::cerr << "Cannot play song: " << Mix_GetError() << std::endl;
+            return;
+        }
+
+        Mix_PlayMusic(music, -1);
+        is_playing = true;
+        std::cout << "Now Playing: " << current_song_title << std::endl;
+    }
+
+    void pause_song() {
+        if (is_playing) {
+            Mix_PauseMusic();
+            is_playing = false;        
+            std::cout << "Music Paused." << std::endl;
+        } else {
+            Mix_ResumeMusic();
+            is_playing = true;
+            std::cout << "Music Resumed." << std::endl;
+        }
+    }
+
+    void stop_song() {
+        Mix_HaltMusic();
+        is_playing = false;
+        std::cout << "Music Stopped." << std::endl;
+    }
+
+    void select_song(const std::string& title, const std::string& file) {
+        current_song_title = title;
+        current_song_file = file;
+        std::cout << "Selected Song: " << title << std::endl;
+    }
+};
