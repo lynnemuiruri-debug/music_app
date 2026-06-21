@@ -1,69 +1,49 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <stdexcept>
-#include <SDL.h>
-#include <SDL_mixer.h>
+class BoombaFM:
+    def __init__(self):
+        # These two store info about whichever song is currently selected,
+        self.current_song_title = None
+        self.current_song_file = None
+        self.is_playing = False
 
-class BoombaFM {
-private:
-    std::string current_song_title;
-    std::string current_song_file;
-    bool is_playing;
-    
-public:
-    BoombaFM() : is_playing(false) {
-        if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-            throw std::runtime_error("SDL could not initialize! SDL_Error: " + std::string(SDL_GetError()));
-        }
-        if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-            throw std::runtime_error("SDL_mixer could not initialize! SDL_mixer Error: " + std::string(Mix_GetError()));
-        }
-    }
+    def select_song(self, title, file_path):
+        """
+        Just remembers which song the user picked — doesn't play it yet.
+        """
+        self.current_song_title = title
+        self.current_song_file = file_path
+        print(f"Selected Song: {title}")
 
-    ~BoombaFM() {
-        Mix_CloseAudio();
-        SDL_Quit();
-    }
+    def play_current(self):
+        """
+        Loads the selected song's file and plays it.
+        """
+        if not self.current_song_file:
+            print("No Song Selected. Please select a song first.")
+            return
 
-    void play_current() {
-        if (current_song_file.empty()) {
-            std::cerr << "No Song Selected. Please select a song first." << std::endl;
-            return;
-        }
+        try:
+            pygame.mixer.music.load(self.current_song_file)
+            pygame.mixer.music.play()
+            self.is_playing = True
+            print(f"Now Playing: {self.current_song_title}")
+        except pygame.error as e:
+            print(f"Cannot play song: {e}")
 
-        Mix_Music* music = Mix_LoadMUS(current_song_file.c_str());
-        if (!music) {
-            std::cerr << "Cannot play song: " << Mix_GetError() << std::endl;
-            return;
-        }
+    def pause_song(self):
+        """
+        if self.is_playing:
+            pygame.mixer.music.pause()
+            self.is_playing = False
+            print("Music Paused.")
+        else:
+            pygame.mixer.music.unpause()
+            self.is_playing = True
+            print("Music Resumed.")
 
-        Mix_PlayMusic(music, -1);
-        is_playing = true;
-        std::cout << "Now Playing: " << current_song_title << std::endl;
-    }
-
-    void pause_song() {
-        if (is_playing) {
-            Mix_PauseMusic();
-            is_playing = false;        
-            std::cout << "Music Paused." << std::endl;
-        } else {
-            Mix_ResumeMusic();
-            is_playing = true;
-            std::cout << "Music Resumed." << std::endl;
-        }
-    }
-
-    void stop_song() {
-        Mix_HaltMusic();
-        is_playing = false;
-        std::cout << "Music Stopped." << std::endl;
-    }
-
-    void select_song(const std::string& title, const std::string& file) {
-        current_song_title = title;
-        current_song_file = file;
-        std::cout << "Selected Song: " << title << std::endl;
-    }
-};
+    def stop_song(self):
+        """
+        Stops playback completely (can't resume from this point).
+        """
+        pygame.mixer.music.stop()
+        self.is_playing = False
+        print("Music Stopped.")
