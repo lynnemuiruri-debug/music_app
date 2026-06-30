@@ -14,9 +14,7 @@ class BoombaFM:
         print(f"Selected Song: {title}")
 
     def play_current(self):
-        """
-        Loads the selected song's file and plays it.
-        """
+     #Loads the selected song's file and plays it.
         if not self.current_song_file:
             print("No Song Selected. Please select a song first.")
             return
