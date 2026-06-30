@@ -1,7 +1,8 @@
 import pygame
 class BoombaFM:
     def __init__(self):
-        # These two store info about whichever song is currently selected,
+        # These three store info about whichever song is currently selected,
+        pygame.mixer.init()
         self.current_song_title = None
         self.current_song_file = None
         self.is_playing = False
