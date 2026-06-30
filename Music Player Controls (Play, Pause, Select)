@@ -8,9 +8,7 @@ class BoombaFM:
         self.is_playing = False
 
     def select_song(self, title, file_path):
-        """
-        Just remembers which song the user picked — doesn't play it yet.
-        """
+        #Just remembers which song the user picked — doesn't play it yet.
         self.current_song_title = title
         self.current_song_file = file_path
         print(f"Selected Song: {title}")
