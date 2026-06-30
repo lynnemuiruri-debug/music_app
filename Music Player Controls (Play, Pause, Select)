@@ -28,7 +28,7 @@ class BoombaFM:
             print(f"Cannot play song: {e}")
 
     def pause_song(self):
-        """
+    #Toggles between pause and resume depending on current state.
         if self.is_playing:
             pygame.mixer.music.pause()
             self.is_playing = False
