@@ -45,8 +45,6 @@ def perform_search(self):
     else:
         self.search_results.insert(tk.END, "No results found")
 
-
-# --- TESTING WINDOW WRAPPER ---
 if __name__ == "__main__":
     window = tk.Tk()
     window.title("Boomba FM - Search Testing")
