@@ -39,9 +39,7 @@ class BoombaFM:
             print("Music Resumed.")
 
     def stop_song(self):
-        """
-        Stops playback completely (can't resume from this point).
-        """
+    #Stops playback completely (can't resume from this point).
         pygame.mixer.music.stop()
         self.is_playing = False
         print("Music Stopped.")
