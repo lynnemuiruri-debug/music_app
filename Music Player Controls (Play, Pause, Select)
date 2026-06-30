@@ -1,3 +1,4 @@
+import pygame
 class BoombaFM:
     def __init__(self):
         # These two store info about whichever song is currently selected,
